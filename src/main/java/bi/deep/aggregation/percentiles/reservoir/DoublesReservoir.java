@@ -18,52 +18,58 @@
  */
 package bi.deep.aggregation.percentiles.reservoir;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.druid.java.util.common.IAE;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import org.apache.commons.collections.CollectionUtils;
 
-@JsonSerialize(using = DoublesReservoirSerializer.class)
-@JsonDeserialize(using = DoublesReservoirDeserializer.class)
 public class DoublesReservoir implements Serializable {
     public static final Comparator<DoublesReservoir> COMPARATOR =
             Comparator.nullsFirst(Comparator.comparingInt(DoublesReservoir::hashCode));
 
-    public static final DoublesReservoir EMPTY = new DoublesReservoir(0, Collections.emptyList(), true);
+    public static final DoublesReservoir EMPTY = new DoublesReservoir(0, Collections.emptyList());
     private static final Random RANDOM = new Random();
 
     private final int maxSize;
     private int totalItemsSeen;
     private final List<Double> reservoir;
-    private boolean alreadySorted;
+    private boolean alreadySorted = true;
 
     public DoublesReservoir(int maxSize) {
-        this(maxSize, new ArrayList<>(maxSize), false);
+        this(maxSize, new ArrayList<>(maxSize));
     }
 
-    public DoublesReservoir(int maxSize, List<Double> reservoir, boolean alreadySorted) {
-        this(maxSize, reservoir, alreadySorted, reservoir.size());
+    public DoublesReservoir(int maxSize, List<Double> reservoir) {
+        this(maxSize, reservoir, reservoir.size());
     }
 
-    public DoublesReservoir(int maxSize, List<Double> reservoir, boolean alreadySorted, int totalItemsSeen) {
+    @JsonCreator
+    public DoublesReservoir(
+            @JsonProperty("maxSize") int maxSize,
+            @JsonProperty("reservoir") List<Double> reservoir,
+            @JsonProperty("totalItemsSeen") int totalItemsSeen) {
         this.maxSize = maxSize;
         this.reservoir = reservoir;
         this.totalItemsSeen = totalItemsSeen;
-        this.alreadySorted = alreadySorted;
     }
 
     public void addAll(List<Double> values) {
         if (CollectionUtils.isNotEmpty(values)) {
-            values.forEach(this::add);
+            values.forEach(this::accept);
         }
     }
 
-    public void add(double value) {
+    public void accept(double value) {
         ++totalItemsSeen;
         alreadySorted = false; // reset
 
@@ -71,12 +77,28 @@ public class DoublesReservoir implements Serializable {
             reservoir.add(value);
         } else {
             int index = RANDOM.nextInt(totalItemsSeen);
+
             if (index < maxSize) {
                 reservoir.set(index, value);
             }
         }
     }
 
+    public void setAlreadySorted(boolean alreadySorted) {
+        this.alreadySorted = alreadySorted;
+    }
+
+    @JsonProperty
+    public int getTotalItemsSeen() {
+        return totalItemsSeen;
+    }
+
+    @JsonProperty
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    @JsonProperty("reservoir")
     public List<Double> getSortedValues() {
         final List<Double> sorted = new ArrayList<>(reservoir);
 
@@ -111,7 +133,7 @@ public class DoublesReservoir implements Serializable {
         return sortedList.get(Math.max(0, Math.min(index, sortedList.size() - 1)));
     }
 
-    public DoublesReservoir merge(DoublesReservoir source) {
+    public DoublesReservoir mergeWith(DoublesReservoir source) {
         if (source != null) {
             this.addAll(source.reservoir);
         }
@@ -119,30 +141,53 @@ public class DoublesReservoir implements Serializable {
         return this;
     }
 
-    public List<Double> get() {
-        return getSortedValues();
-    }
-
     public static DoublesReservoir from(List<Double> value) {
-        return new DoublesReservoir(value.size(), value, true);
+        return new DoublesReservoir(value.size(), value);
     }
 
-    public static DoublesReservoir deserialize(Object serializedReservoir, int maxSize) {
-        if (serializedReservoir == null) {
-            return null;
+    @SuppressWarnings("unchecked")
+    public static DoublesReservoir deserialize(Object data) {
+        if (data == null) {
+            return DoublesReservoir.EMPTY;
         }
 
-        if (serializedReservoir instanceof DoublesReservoir) {
-            return (DoublesReservoir) serializedReservoir;
+        if (data instanceof Map) {
+            return DoublesReservoirUtils.convert(data);
         }
 
-        if (serializedReservoir instanceof List) {
-            @SuppressWarnings("unchecked")
-            final DoublesReservoir result = new DoublesReservoir(maxSize, (List<Double>) serializedReservoir, true);
-            return result;
+        if (data instanceof DoublesReservoir) {
+            return (DoublesReservoir) data;
         }
 
-        throw new IllegalArgumentException("Cannot deserialize object of type "
-                + serializedReservoir.getClass().getName());
+        if (data instanceof String) {
+            final String json = (String) data;
+
+            if (StringUtils.isEmpty(json)) {
+                return null;
+            }
+
+            try {
+                return DoublesReservoirUtils.readJson(json);
+            } catch (JsonProcessingException e) {
+                throw new IAE(
+                        "Cannot deserialize object of type " + data.getClass().getName());
+            }
+        }
+
+        if (data instanceof List) {
+            return DoublesReservoir.from((List<Double>) data);
+        }
+
+        throw new IAE("Cannot deserialize object of type " + data.getClass().getName());
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{"
+                + "maxSize=" + maxSize
+                + ", alreadySorted=" + alreadySorted
+                + ", totalItemsSeen=" + totalItemsSeen
+                + ", reservoir=" + reservoir
+                + "}";
     }
 }

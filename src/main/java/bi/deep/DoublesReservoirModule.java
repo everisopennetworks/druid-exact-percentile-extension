@@ -19,24 +19,30 @@
 package bi.deep;
 
 import bi.deep.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
-import bi.deep.aggregation.percentiles.aggregator.DoublesReservoirMergeAggregatorFactory;
 import bi.deep.aggregation.percentiles.aggregator.DoublesReservoirToPercentilePostAggregator;
 import bi.deep.aggregation.percentiles.aggregator.DoublesReservoirToPercentilesPostAggregator;
+import bi.deep.aggregation.percentiles.reservoir.DoublesReservoirComplexMetricSerde;
 import bi.deep.aggregation.percentiles.sql.DoublesReservoirObjectSqlAggregator;
 import bi.deep.aggregation.percentiles.sql.DoublesReservoirPercentileOperatorConversion;
 import bi.deep.aggregation.percentiles.sql.DoublesReservoirPercentilesOperatorConversion;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Binder;
 import java.util.Collections;
 import java.util.List;
 import org.apache.druid.initialization.DruidModule;
+import org.apache.druid.segment.column.ColumnType;
+import org.apache.druid.segment.serde.ComplexMetrics;
 import org.apache.druid.sql.guice.SqlBindings;
 
 public class DoublesReservoirModule implements DruidModule {
+    public static final String TYPE_NAME = "doublesReservoir";
+    public static final ColumnType TYPE = ColumnType.ofComplex(TYPE_NAME);
 
     @Override
     public void configure(Binder binder) {
+        registerSerde();
         SqlBindings.addAggregator(binder, DoublesReservoirObjectSqlAggregator.class);
 
         SqlBindings.addOperatorConversion(binder, DoublesReservoirPercentileOperatorConversion.class);
@@ -47,8 +53,13 @@ public class DoublesReservoirModule implements DruidModule {
     public List<? extends Module> getJacksonModules() {
         return Collections.singletonList(new SimpleModule(getClass().getSimpleName())
                 .registerSubtypes(DoublesReservoirAggregatorFactory.class)
-                .registerSubtypes(DoublesReservoirMergeAggregatorFactory.class)
+                // .registerSubtypes(DoublesReservoirMergeAggregatorFactory.class)
                 .registerSubtypes(DoublesReservoirToPercentilePostAggregator.class)
                 .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class));
+    }
+
+    @VisibleForTesting
+    public static void registerSerde() {
+        ComplexMetrics.registerSerde(TYPE_NAME, new DoublesReservoirComplexMetricSerde());
     }
 }

@@ -29,6 +29,7 @@
   <description>Druid custom extension for calculating exact percentiles using Reservoir Sampling.</description>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <druid.version>${project.version}</druid.version>
@@ -111,6 +112,8 @@
   </dependencies>
 
   <build>
+    <finalName>${project.artifactId}-${project.version}</finalName>
+
     <plugins>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
@@ -161,6 +164,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
+          <debug>true</debug>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
           <source>1.8</source>
           <target>1.8</target>
@@ -224,7 +228,6 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <finalName>${project.artifactId}-${project.version}</finalName>
               <tarLongFileMode>posix</tarLongFileMode>
               <descriptors>
                 <descriptor>src/assembly/assembly.xml</descriptor>

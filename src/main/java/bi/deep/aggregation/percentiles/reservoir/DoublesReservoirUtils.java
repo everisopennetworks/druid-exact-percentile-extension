@@ -18,23 +18,25 @@
  */
 package bi.deep.aggregation.percentiles.reservoir;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import java.io.IOException;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DoublesReservoirSerializer extends JsonSerializer<DoublesReservoir> {
+public class DoublesReservoirUtils {
+    public static final ObjectMapper MAPPER = new ObjectMapper();
 
-    @Override
-    public void serialize(DoublesReservoir reservoir, JsonGenerator gen, SerializerProvider serializers)
-            throws IOException {
-        List<Double> sortedValues = reservoir.getSortedValues();
+    private DoublesReservoirUtils() {
+        throw new AssertionError("No DoublesReservoirUtils instances for you!");
+    }
 
-        gen.writeStartArray();
-        for (Double value : sortedValues) {
-            gen.writeNumber(value);
-        }
-        gen.writeEndArray();
+    public static String convertToJson(DoublesReservoir reservoir) throws JsonProcessingException {
+        return MAPPER.writeValueAsString(reservoir);
+    }
+
+    public static DoublesReservoir readJson(String value) throws JsonProcessingException {
+        return MAPPER.readValue(value, DoublesReservoir.class);
+    }
+
+    public static DoublesReservoir convert(Object content) {
+        return MAPPER.convertValue(content, DoublesReservoir.class);
     }
 }

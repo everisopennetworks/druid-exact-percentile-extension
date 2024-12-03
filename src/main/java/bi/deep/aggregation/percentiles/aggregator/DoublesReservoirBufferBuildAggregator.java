@@ -24,38 +24,50 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
+import org.apache.druid.java.util.common.IAE;
 import org.apache.druid.query.aggregation.BufferAggregator;
 import org.apache.druid.segment.ColumnValueSelector;
 
 public class DoublesReservoirBufferBuildAggregator implements BufferAggregator {
-    private final ColumnValueSelector<Double> selector;
+    private final ColumnValueSelector<?> selector;
     private final IdentityHashMap<ByteBuffer, Int2ObjectMap<DoublesReservoir>> cache = new IdentityHashMap<>();
     private final int maxSize;
 
-    public DoublesReservoirBufferBuildAggregator(ColumnValueSelector<Double> selector, int maxReservoirSize) {
+    public DoublesReservoirBufferBuildAggregator(ColumnValueSelector<?> selector, int maxReservoirSize) {
         this.selector = Preconditions.checkNotNull(selector);
         this.maxSize = maxReservoirSize;
     }
 
     @Override
     public void init(ByteBuffer buffer, int position) {
-        DoublesReservoir emptyReservoir = new DoublesReservoir(maxSize);
+        final DoublesReservoir emptyReservoir = new DoublesReservoir(maxSize);
         addToCache(buffer, position, emptyReservoir);
     }
 
     @Override
     public void aggregate(ByteBuffer buffer, int position) {
-        if (selector.isNull()) {
+        final Object obj = selector.getObject();
+
+        if (obj == null) {
             return;
         }
 
-        DoublesReservoir doublesReservoir = cache.get(buffer).get(position);
-        doublesReservoir.add(selector.getDouble());
+        final DoublesReservoir doublesReservoir = get(buffer, position);
+
+        if (obj instanceof Number) {
+            doublesReservoir.accept(((Number) obj).doubleValue());
+        } else if (obj instanceof DoublesReservoir) {
+            doublesReservoir.mergeWith((DoublesReservoir) obj);
+        } else {
+            throw new IAE(
+                    "Expected a number or an instance of DoublesReservoir, but received [%s] of type [%s]",
+                    obj, obj.getClass());
+        }
     }
 
     @Override
-    public Object get(final ByteBuffer buffer, final int position) {
-        return cache.get(buffer).get(position).get();
+    public DoublesReservoir get(final ByteBuffer buffer, final int position) {
+        return cache.get(buffer).get(position);
     }
 
     @Override
@@ -75,7 +87,7 @@ public class DoublesReservoirBufferBuildAggregator implements BufferAggregator {
 
     @Override
     public void relocate(int oldPosition, int newPosition, ByteBuffer oldBuffer, ByteBuffer newBuffer) {
-        DoublesReservoir doublesReservoir = cache.get(oldBuffer).get(oldPosition);
+        final DoublesReservoir doublesReservoir = get(oldBuffer, oldPosition);
         addToCache(newBuffer, newPosition, doublesReservoir);
 
         final Int2ObjectMap<DoublesReservoir> map = cache.get(oldBuffer);
@@ -87,7 +99,6 @@ public class DoublesReservoirBufferBuildAggregator implements BufferAggregator {
     }
 
     private void addToCache(final ByteBuffer buffer, final int position, final DoublesReservoir histogram) {
-        Int2ObjectMap<DoublesReservoir> map = cache.computeIfAbsent(buffer, b -> new Int2ObjectOpenHashMap<>());
-        map.put(position, histogram);
+        cache.computeIfAbsent(buffer, b -> new Int2ObjectOpenHashMap<>()).put(position, histogram);
     }
 }

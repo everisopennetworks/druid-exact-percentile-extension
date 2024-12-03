@@ -78,13 +78,14 @@ public class DoublesReservoirPercentilesOperatorConversion implements SqlOperato
             RexNode rexNode,
             PostAggregatorVisitor postAggregatorVisitor) {
         final List<RexNode> operands = ((RexCall) rexNode).getOperands();
-        final double[] args = new double[operands.size() - 1];
-        final PostAggregator inputSketchPostAgg = OperatorConversions.toPostAggregator(
+        final PostAggregator aggregator = OperatorConversions.toPostAggregator(
                 plannerContext, rowSignature, operands.get(0), postAggregatorVisitor, true);
 
-        if (inputSketchPostAgg == null) {
+        if (aggregator == null) {
             return null;
         }
+
+        final double[] args = new double[operands.size() - 1];
 
         for (int i = 1; i < operands.size(); i++) {
             RexNode operand = operands.get(i);
@@ -94,7 +95,7 @@ public class DoublesReservoirPercentilesOperatorConversion implements SqlOperato
 
         return new DoublesReservoirToPercentilesPostAggregator(
                 postAggregatorVisitor.getOutputNamePrefix() + postAggregatorVisitor.getAndIncrementCounter(),
-                inputSketchPostAgg,
+                aggregator,
                 args);
     }
 

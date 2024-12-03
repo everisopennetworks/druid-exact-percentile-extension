@@ -18,6 +18,7 @@
  */
 package bi.deep.aggregation.percentiles.aggregator;
 
+import static bi.deep.DoublesReservoirModule.TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -118,7 +119,7 @@ class DoublesReservoirToPercentilePostAggregatorTest {
         assertEquals(
                 RowSignature.builder()
                         .addTimeColumn()
-                        .add("reservoir", ColumnType.DOUBLE_ARRAY)
+                        .add("reservoir", TYPE)
                         .add("a", ColumnType.DOUBLE)
                         .build(),
                 new TimeseriesQueryQueryToolChest().resultArraySignature(query));

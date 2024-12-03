@@ -18,6 +18,7 @@
  */
 package bi.deep.aggregation.percentiles.aggregator;
 
+import static bi.deep.DoublesReservoirModule.TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -86,26 +87,19 @@ class DoublesReservoirAggregatorFactoryTest {
                 .granularity(Granularities.HOUR)
                 .aggregators(
                         new CountAggregatorFactory("count"),
-                        new DoublesReservoirAggregatorFactory("doublesReservoir", "col", 8),
-                        new DoublesReservoirMergeAggregatorFactory("doubleReservoirMerge", 8))
+                        new DoublesReservoirAggregatorFactory("doublesReservoir", "col", 8))
                 .postAggregators(
                         new FieldAccessPostAggregator("doublesReservoir-access", "doublesReservoir"),
-                        new FinalizingFieldAccessPostAggregator("doublesReservoir-finalize", "doublesReservoir"),
-                        new FieldAccessPostAggregator("doubleReservoirMerge-access", "doubleReservoirMerge"),
-                        new FinalizingFieldAccessPostAggregator(
-                                "doubleReservoirMerge-finalize", "doubleReservoirMerge"))
+                        new FinalizingFieldAccessPostAggregator("doublesReservoir-finalize", "doublesReservoir"))
                 .build();
 
         assertEquals(
                 RowSignature.builder()
                         .addTimeColumn()
                         .add("count", ColumnType.LONG)
-                        .add("doublesReservoir", DoublesReservoirAggregatorFactory.TYPE)
-                        .add("doubleReservoirMerge", DoublesReservoirAggregatorFactory.TYPE)
-                        .add("doublesReservoir-access", DoublesReservoirAggregatorFactory.TYPE)
-                        .add("doublesReservoir-finalize", DoublesReservoirAggregatorFactory.TYPE)
-                        .add("doubleReservoirMerge-access", DoublesReservoirAggregatorFactory.TYPE)
-                        .add("doubleReservoirMerge-finalize", DoublesReservoirAggregatorFactory.TYPE)
+                        .add("doublesReservoir", TYPE)
+                        .add("doublesReservoir-access", TYPE)
+                        .add("doublesReservoir-finalize", TYPE)
                         .build(),
                 new TimeseriesQueryQueryToolChest().resultArraySignature(query));
     }

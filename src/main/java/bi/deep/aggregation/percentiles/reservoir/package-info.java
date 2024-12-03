@@ -16,19 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+@EverythingIsNonnullByDefault
 package bi.deep.aggregation.percentiles.reservoir;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import java.io.IOException;
-import java.util.List;
-
-public class DoublesReservoirDeserializer extends JsonDeserializer<DoublesReservoir> {
-    @Override
-    public DoublesReservoir deserialize(JsonParser p, DeserializationContext ctx) throws IOException {
-        @SuppressWarnings("unchecked")
-        List<Double> list = p.readValueAs(List.class);
-        return new DoublesReservoir(list.size(), list, true);
-    }
-}
+import org.apache.druid.annotations.EverythingIsNonnullByDefault;

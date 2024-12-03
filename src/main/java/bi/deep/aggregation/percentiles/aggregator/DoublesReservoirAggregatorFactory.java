@@ -18,7 +18,8 @@
  */
 package bi.deep.aggregation.percentiles.aggregator;
 
-import static bi.deep.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory.TYPE_NAME;
+import static bi.deep.DoublesReservoirModule.TYPE;
+import static bi.deep.DoublesReservoirModule.TYPE_NAME;
 
 import bi.deep.aggregation.percentiles.reservoir.DoublesReservoir;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -29,7 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nullable;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.druid.java.util.common.IAE;
 import org.apache.druid.query.aggregation.AggregateCombiner;
 import org.apache.druid.query.aggregation.Aggregator;
@@ -40,14 +41,10 @@ import org.apache.druid.query.cache.CacheKeyBuilder;
 import org.apache.druid.segment.ColumnSelectorFactory;
 import org.apache.druid.segment.ColumnValueSelector;
 import org.apache.druid.segment.NilColumnValueSelector;
-import org.apache.druid.segment.column.ColumnCapabilities;
 import org.apache.druid.segment.column.ColumnType;
 
 @JsonTypeName(TYPE_NAME)
 public class DoublesReservoirAggregatorFactory extends AggregatorFactory {
-    public static final String TYPE_NAME = "doublesReservoir";
-    public static final ColumnType TYPE = ColumnType.DOUBLE_ARRAY;
-
     private static final byte CACHE_ID = 0x60;
 
     private final String name;
@@ -66,7 +63,7 @@ public class DoublesReservoirAggregatorFactory extends AggregatorFactory {
         if (StringUtils.isBlank(fieldName)) {
             throw new IAE("Parameter fieldName must be specified");
         }
-        if (maxReservoirSize == null || maxReservoirSize <= 0) {
+        if (maxReservoirSize <= 0) {
             throw new IAE("Parameter maxReservoirSize must be specified and greater than 0");
         }
 
@@ -77,44 +74,20 @@ public class DoublesReservoirAggregatorFactory extends AggregatorFactory {
 
     @Override
     public Aggregator factorize(final ColumnSelectorFactory metricFactory) {
-        final ColumnCapabilities capabilities = metricFactory.getColumnCapabilities(fieldName);
+        final ColumnValueSelector<?> selector = metricFactory.makeColumnValueSelector(getFieldName());
 
-        if (capabilities != null && capabilities.isNumeric()) {
-            @SuppressWarnings("unchecked")
-            final ColumnValueSelector<Double> selector = metricFactory.makeColumnValueSelector(fieldName);
-
-            return selector instanceof NilColumnValueSelector
-                    ? new NoopReservoirAggregator()
-                    : new DoublesReservoirBuildAggregator(selector, maxReservoirSize);
-        } else {
-            @SuppressWarnings("unchecked")
-            final ColumnValueSelector<DoublesReservoir> selector = metricFactory.makeColumnValueSelector(fieldName);
-
-            return selector instanceof NilColumnValueSelector
-                    ? new NoopReservoirAggregator()
-                    : new DoublesReservoirMergeAggregator(selector, maxReservoirSize);
-        }
+        return selector instanceof NilColumnValueSelector
+                ? new NoopReservoirAggregator()
+                : new DoublesReservoirBuildAggregator(selector, getMaxReservoirSize());
     }
 
     @Override
     public BufferAggregator factorizeBuffered(ColumnSelectorFactory metricFactory) {
-        final ColumnCapabilities capabilities = metricFactory.getColumnCapabilities(fieldName);
+        final ColumnValueSelector<?> selector = metricFactory.makeColumnValueSelector(getFieldName());
 
-        if (capabilities != null && capabilities.isNumeric()) {
-            @SuppressWarnings("unchecked")
-            final ColumnValueSelector<Double> selector = metricFactory.makeColumnValueSelector(fieldName);
-
-            return selector instanceof NilColumnValueSelector
-                    ? new NoopReservoirBufferAggregator()
-                    : new DoublesReservoirBufferBuildAggregator(selector, maxReservoirSize);
-        } else {
-            @SuppressWarnings("unchecked")
-            final ColumnValueSelector<DoublesReservoir> selector = metricFactory.makeColumnValueSelector(fieldName);
-
-            return selector instanceof NilColumnValueSelector
-                    ? new NoopReservoirBufferAggregator()
-                    : new DoublesReservoirMergeBufferAggregator(selector, maxReservoirSize);
-        }
+        return selector instanceof NilColumnValueSelector
+                ? new NoopReservoirBufferAggregator()
+                : new DoublesReservoirBufferBuildAggregator(selector, getMaxReservoirSize());
     }
 
     @Override
@@ -132,22 +105,12 @@ public class DoublesReservoirAggregatorFactory extends AggregatorFactory {
             return lhs;
         }
 
-        @SuppressWarnings("unchecked")
-        final DoublesReservoir lhsReservoir = lhs instanceof DoublesReservoir
-                ? (DoublesReservoir) lhs
-                : new DoublesReservoir(maxReservoirSize, (List<Double>) lhs, false);
-
-        @SuppressWarnings("unchecked")
-        final DoublesReservoir rhsReservoir = rhs instanceof DoublesReservoir
-                ? (DoublesReservoir) rhs
-                : new DoublesReservoir(maxReservoirSize, (List<Double>) rhs, false);
-
-        return lhsReservoir.merge(rhsReservoir);
+        return DoublesReservoir.deserialize(lhs).mergeWith(DoublesReservoir.deserialize(rhs));
     }
 
     @Override
     public AggregatorFactory getCombiningFactory() {
-        return new DoublesReservoirMergeAggregatorFactory(getName(), getMaxReservoirSize());
+        return new DoublesReservoirAggregatorFactory(getName(), getName(), getMaxReservoirSize());
     }
 
     @SuppressWarnings("rawtypes")
@@ -166,13 +129,15 @@ public class DoublesReservoirAggregatorFactory extends AggregatorFactory {
             public void fold(final ColumnValueSelector selector) {
                 DoublesReservoir other = (DoublesReservoir) selector.getObject();
 
-                if (other != null) {
-                    if (combined == null) {
-                        combined = new DoublesReservoir(maxReservoirSize);
-                    }
-
-                    combined.merge(other);
+                if (other == null) {
+                    return;
                 }
+
+                if (combined == null) {
+                    combined = new DoublesReservoir(maxReservoirSize);
+                }
+
+                combined.mergeWith(other);
             }
 
             @Override
@@ -189,7 +154,7 @@ public class DoublesReservoirAggregatorFactory extends AggregatorFactory {
 
     @Override
     public Object deserialize(Object serializedObject) {
-        return DoublesReservoir.deserialize(serializedObject, maxReservoirSize);
+        return DoublesReservoir.deserialize(serializedObject);
     }
 
     @Nullable

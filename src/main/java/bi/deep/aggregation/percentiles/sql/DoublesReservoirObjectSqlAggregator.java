@@ -18,6 +18,8 @@
  */
 package bi.deep.aggregation.percentiles.sql;
 
+import static bi.deep.DoublesReservoirModule.TYPE;
+
 import bi.deep.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -47,8 +49,7 @@ public class DoublesReservoirObjectSqlAggregator implements SqlAggregator {
     private static final SqlAggFunction FUNCTION_INSTANCE = OperatorConversions.aggregatorBuilder(NAME)
             .operandNames("column", "maxSize")
             .operandTypes(SqlTypeFamily.ANY, SqlTypeFamily.EXACT_NUMERIC)
-            .returnTypeInference(
-                    Calcites.complexReturnTypeWithNullability(DoublesReservoirAggregatorFactory.TYPE, false))
+            .returnTypeInference(Calcites.complexReturnTypeWithNullability(TYPE, false))
             .requiredOperandCount(2)
             .literalOperands(1)
             .functionCategory(SqlFunctionCategory.NUMERIC)

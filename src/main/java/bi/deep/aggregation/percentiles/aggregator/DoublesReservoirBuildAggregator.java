@@ -19,28 +19,44 @@
 package bi.deep.aggregation.percentiles.aggregator;
 
 import bi.deep.aggregation.percentiles.reservoir.DoublesReservoir;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
+import org.apache.druid.java.util.common.IAE;
 import org.apache.druid.query.aggregation.Aggregator;
 import org.apache.druid.segment.ColumnValueSelector;
 
 public class DoublesReservoirBuildAggregator implements Aggregator {
-    private final DoublesReservoir reservoir;
-    private final ColumnValueSelector<Double> selector;
+    private final ColumnValueSelector<?> selector;
 
-    public DoublesReservoirBuildAggregator(final ColumnValueSelector<Double> selector, int maxSize) {
+    @GuardedBy("this")
+    private DoublesReservoir reservoir;
+
+    public DoublesReservoirBuildAggregator(final ColumnValueSelector<?> selector, int maxSize) {
         this.selector = selector;
         this.reservoir = new DoublesReservoir(maxSize);
     }
 
     @Override
     public synchronized void aggregate() {
-        if (!selector.isNull()) {
-            reservoir.add(selector.getDouble());
+        Object obj = selector.getObject();
+
+        if (obj == null) {
+            return;
+        }
+
+        if (obj instanceof Number) {
+            this.reservoir.accept(((Number) obj).doubleValue());
+        } else if (obj instanceof DoublesReservoir) {
+            this.reservoir.mergeWith((DoublesReservoir) obj);
+        } else {
+            throw new IAE(
+                    "Expected a number or an instance of DoublesReservoir, but received [%s] of type [%s]",
+                    obj, obj.getClass());
         }
     }
 
     @Override
     public synchronized Object get() {
-        return reservoir.get();
+        return reservoir;
     }
 
     @Override
@@ -60,6 +76,6 @@ public class DoublesReservoirBuildAggregator implements Aggregator {
 
     @Override
     public synchronized void close() {
-        // NoOp
+        reservoir = null;
     }
 }

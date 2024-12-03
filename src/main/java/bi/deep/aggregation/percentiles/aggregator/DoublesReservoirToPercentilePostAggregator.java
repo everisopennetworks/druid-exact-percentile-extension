@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Doubles;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -74,10 +73,7 @@ public class DoublesReservoirToPercentilePostAggregator implements PostAggregato
     @Override
     public Object compute(Map<String, Object> combinedAggregators) {
         final Object compute = getField().compute(combinedAggregators);
-        @SuppressWarnings("unchecked")
-        final DoublesReservoir reservoir = compute instanceof DoublesReservoir
-                                           ? (DoublesReservoir) compute
-                                           : DoublesReservoir.from((List<Double>) compute);
+        final DoublesReservoir reservoir = DoublesReservoir.deserialize(compute);
 
         return reservoir.getPercentile(getFraction());
     }
