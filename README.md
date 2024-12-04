@@ -147,7 +147,7 @@ The result will be an array of percentile values, one for each fraction specifie
    ],
    "postAggregations": [
       {
-         "type": "doublesReservoirToPercentile",
+         "type": "doublesReservoirToPercentiles",
          "name": "AllPercentiles",
          "field": {
             "type": "fieldAccess",
@@ -164,8 +164,7 @@ The result will be an array of percentile values, one for each fraction specifie
             "0.8",
             "0.9",
             "1"
-         ],
-         "fraction": "0.9"
+         ]
       }
    ]
 }

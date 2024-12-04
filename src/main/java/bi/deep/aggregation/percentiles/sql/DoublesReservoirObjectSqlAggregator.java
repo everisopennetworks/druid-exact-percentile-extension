@@ -78,9 +78,6 @@ public class DoublesReservoirObjectSqlAggregator implements SqlAggregator {
             return null;
         }
 
-        final AggregatorFactory aggregatorFactory;
-        final String fieldName = StringUtils.format("%s:agg", name);
-
         final RexNode resolutionArg =
                 inputAccessor.getField(aggregateCall.getArgList().get(1));
 
@@ -89,7 +86,9 @@ public class DoublesReservoirObjectSqlAggregator implements SqlAggregator {
             return null;
         }
 
+        final String fieldName = StringUtils.format("%s:agg", name);
         final int maxSize = ((Number) RexLiteral.value(resolutionArg)).intValue();
+        final AggregatorFactory aggregatorFactory;
 
         // No existing match found. Create a new one.
         if (input.isDirectColumnAccess()) {

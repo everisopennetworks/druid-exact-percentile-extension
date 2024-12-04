@@ -25,6 +25,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.druid.java.util.common.IAE;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,10 +85,6 @@ public class DoublesReservoir implements Serializable {
         }
     }
 
-    public void setAlreadySorted(boolean alreadySorted) {
-        this.alreadySorted = alreadySorted;
-    }
-
     @JsonProperty
     public int getTotalItemsSeen() {
         return totalItemsSeen;
@@ -124,7 +121,15 @@ public class DoublesReservoir implements Serializable {
         return percentiles;
     }
 
+    private static void checkFractionBound(final double fraction) {
+        if ((fraction < 0.0) || (fraction > 1.0)) {
+            throw new IAE("A fraction must be >= 0 and <= 1.0: " + fraction);
+        }
+    }
+
     private static double calculate(List<Double> sortedList, double fraction) {
+        checkFractionBound(fraction);
+
         if (sortedList.isEmpty()) {
             return Double.NaN;
         }
@@ -133,7 +138,7 @@ public class DoublesReservoir implements Serializable {
         return sortedList.get(Math.max(0, Math.min(index, sortedList.size() - 1)));
     }
 
-    public DoublesReservoir mergeWith(DoublesReservoir source) {
+    public DoublesReservoir mergeWith(@Nullable DoublesReservoir source) {
         if (source != null) {
             this.addAll(source.reservoir);
         }
@@ -146,7 +151,8 @@ public class DoublesReservoir implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    public static DoublesReservoir deserialize(Object data) {
+    @Nullable
+    public static DoublesReservoir deserialize(@Nullable Object data) {
         if (data == null) {
             return DoublesReservoir.EMPTY;
         }

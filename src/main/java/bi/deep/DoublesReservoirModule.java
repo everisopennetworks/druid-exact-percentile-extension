@@ -53,7 +53,6 @@ public class DoublesReservoirModule implements DruidModule {
     public List<? extends Module> getJacksonModules() {
         return Collections.singletonList(new SimpleModule(getClass().getSimpleName())
                 .registerSubtypes(DoublesReservoirAggregatorFactory.class)
-                // .registerSubtypes(DoublesReservoirMergeAggregatorFactory.class)
                 .registerSubtypes(DoublesReservoirToPercentilePostAggregator.class)
                 .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class));
     }
