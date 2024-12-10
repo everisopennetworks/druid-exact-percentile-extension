@@ -24,7 +24,7 @@
 
   <groupId>bi.deep</groupId>
   <artifactId>druid-exact-percentile</artifactId>
-  <version>30.0.1</version>
+  <version>31.0.0</version>
   <name>Druid Exact Percentile Extension</name>
   <description>Druid custom extension for calculating exact percentiles using Reservoir Sampling.</description>
 
