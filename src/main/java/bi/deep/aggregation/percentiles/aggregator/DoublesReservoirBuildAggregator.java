@@ -76,6 +76,6 @@ public class DoublesReservoirBuildAggregator implements Aggregator {
 
     @Override
     public synchronized void close() {
-        reservoir = null;
+        reservoir.clean();
     }
 }

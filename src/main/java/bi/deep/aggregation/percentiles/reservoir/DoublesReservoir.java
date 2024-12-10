@@ -21,11 +21,6 @@ package bi.deep.aggregation.percentiles.reservoir;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.druid.java.util.common.IAE;
-
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +28,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.annotation.Nullable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.druid.java.util.common.IAE;
 
 public class DoublesReservoir implements Serializable {
     public static final Comparator<DoublesReservoir> COMPARATOR =
@@ -83,6 +82,11 @@ public class DoublesReservoir implements Serializable {
                 reservoir.set(index, value);
             }
         }
+    }
+
+    public void clean() {
+        this.reservoir.clear();
+        totalItemsSeen = 0;
     }
 
     @JsonProperty
