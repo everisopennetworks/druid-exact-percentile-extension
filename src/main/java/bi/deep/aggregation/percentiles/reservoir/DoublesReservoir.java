@@ -84,11 +84,6 @@ public class DoublesReservoir implements Serializable {
         }
     }
 
-    public void clean() {
-        this.reservoir.clear();
-        totalItemsSeen = 0;
-    }
-
     @JsonProperty
     public int getTotalItemsSeen() {
         return totalItemsSeen;
