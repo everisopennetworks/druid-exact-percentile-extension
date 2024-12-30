@@ -24,7 +24,7 @@
 
   <groupId>bi.deep</groupId>
   <artifactId>druid-exact-percentile</artifactId>
-  <version>30.0.1</version>
+  <version>30.0.1-SNAPSHOT</version>
   <name>Druid Exact Percentile Extension</name>
   <description>Druid custom extension for calculating exact percentiles using Reservoir Sampling.</description>
 
@@ -32,15 +32,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <druid.version>${project.version}</druid.version>
+    <druid.version>30.0.1</druid.version>
   </properties>
 
   <scm>
-    <connection>scm:git:git://github.com/deep-bi/deep-druid-extensions.git</connection>
-    <developerConnection>scm:git:git://github.com/deep-bi/deep-druid-extensions.git</developerConnection>
-    <url>https://github.com/deep-bi/deep-druid-extensions/tree/main/druid-ip-range-filter</url>
+    <connection>scm:git:git://github.com/deep-bi/druid-exact-percentile-extension.git</connection>
+    <developerConnection>scm:git:git://github.com/deep-bi/druid-exact-percentile-extension.git</developerConnection>
+    <url>https://github.com/deep-bi/druid-exact-percentile-extension/tree/main/</url>
     <tag>HEAD</tag>
   </scm>
+
+  <organization>
+    <name>Deep.BI</name>
+    <url>https://www.deep.bi/</url>
+  </organization>
 
   <dependencies>
     <dependency>
@@ -152,10 +157,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.4.2</version>
         <configuration>
           <archive>
-            <addMavenDescriptor>false</addMavenDescriptor>
+            <manifestEntries>
+              <Implementation-Title>${project.artifactId}</Implementation-Title>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
