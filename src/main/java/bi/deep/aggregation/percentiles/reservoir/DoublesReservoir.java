@@ -133,8 +133,18 @@ public class DoublesReservoir implements Serializable {
             return Double.NaN;
         }
 
-        int index = (int) Math.ceil(fraction * sortedList.size()) - 1;
-        return sortedList.get(Math.max(0, Math.min(index, sortedList.size() - 1)));
+        double rank = fraction * (sortedList.size() - 1);
+        int lowerIndex = (int) Math.floor(rank);
+        int upperIndex = (int) Math.ceil(rank);
+
+        if (lowerIndex == upperIndex) {
+            return sortedList.get(lowerIndex);
+        }
+
+        double weight = rank - lowerIndex;
+
+        // Interpolate between the two values
+        return sortedList.get(lowerIndex) + weight * (sortedList.get(upperIndex) - sortedList.get(lowerIndex));
     }
 
     public DoublesReservoir mergeWith(@Nullable DoublesReservoir source) {
