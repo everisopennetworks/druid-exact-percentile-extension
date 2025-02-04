@@ -19,6 +19,7 @@
 package bi.deep.aggregation.percentiles.reservoir;
 
 import javax.annotation.Nullable;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.druid.data.input.InputRow;
 import org.apache.druid.segment.serde.ComplexMetricExtractor;
 
@@ -36,6 +37,10 @@ public class DoublesReservoirComplexMetricExtractor implements ComplexMetricExtr
 
         if (object == null || object instanceof Number || object instanceof DoublesReservoir) {
             return object;
+        }
+
+        if (object instanceof String && NumberUtils.isCreatable((String) object)) {
+            return Double.parseDouble((String) object);
         }
 
         return DoublesReservoir.deserialize(object);
