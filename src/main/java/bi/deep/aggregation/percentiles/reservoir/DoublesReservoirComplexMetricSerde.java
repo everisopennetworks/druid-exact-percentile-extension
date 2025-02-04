@@ -19,11 +19,7 @@
 package bi.deep.aggregation.percentiles.reservoir;
 
 import bi.deep.DoublesReservoirModule;
-import java.nio.ByteBuffer;
-import org.apache.druid.segment.column.ColumnBuilder;
-import org.apache.druid.segment.data.GenericIndexed;
 import org.apache.druid.segment.data.ObjectStrategy;
-import org.apache.druid.segment.serde.ComplexColumnPartSupplier;
 import org.apache.druid.segment.serde.ComplexMetricExtractor;
 import org.apache.druid.segment.serde.ComplexMetricSerde;
 
@@ -38,13 +34,6 @@ public class DoublesReservoirComplexMetricSerde extends ComplexMetricSerde {
     @Override
     public ComplexMetricExtractor getExtractor() {
         return new DoublesReservoirComplexMetricExtractor();
-    }
-
-    @Override
-    public void deserializeColumn(ByteBuffer buffer, ColumnBuilder builder) {
-        final GenericIndexed<DoublesReservoir> ge =
-                GenericIndexed.read(buffer, getObjectStrategy(), builder.getFileMapper());
-        builder.setComplexColumnSupplier(new ComplexColumnPartSupplier(getTypeName(), ge));
     }
 
     @Override
