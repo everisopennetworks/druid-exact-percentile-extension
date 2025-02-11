@@ -50,6 +50,8 @@ public class DoublesReservoirModule implements DruidModule {
 
         SqlBindings.addOperatorConversion(binder, DoublesReservoirPercentileOperatorConversion.class);
         SqlBindings.addOperatorConversion(binder, DoublesReservoirPercentilesOperatorConversion.class);
+
+        SqlBindings.addOperatorConversion(binder, DoublesReservoirStddevOperatorConversion.class);
     }
 
     @Override
@@ -57,7 +59,9 @@ public class DoublesReservoirModule implements DruidModule {
         return Collections.singletonList(new SimpleModule(getClass().getSimpleName())
                 .registerSubtypes(DoublesReservoirAggregatorFactory.class)
                 .registerSubtypes(DoublesReservoirToPercentilePostAggregator.class)
-                .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class));
+                .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class)
+                .registerSubtypes(DoublesReservoirToStddevPostAggregator.class)
+        );
     }
 
     @VisibleForTesting
