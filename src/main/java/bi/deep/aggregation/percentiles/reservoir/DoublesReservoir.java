@@ -31,6 +31,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.druid.java.util.common.IAE;
 
 public class DoublesReservoir implements Serializable {
@@ -118,6 +119,10 @@ public class DoublesReservoir implements Serializable {
         }
 
         return percentiles;
+    }
+
+    public double getStddev() {
+        return new StandardDeviation().evaluate(reservoir.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
     private static void checkFractionBound(final double fraction) {
