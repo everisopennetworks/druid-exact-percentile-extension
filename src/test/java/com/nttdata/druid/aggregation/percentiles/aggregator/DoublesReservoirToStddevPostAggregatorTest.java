@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static bi.deep.DoublesReservoirModule.TYPE;
+import static com.nttdata.druid.DoublesReservoirModule.TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DoublesReservoirToStddevPostAggregatorTest {
