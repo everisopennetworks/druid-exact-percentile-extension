@@ -18,30 +18,27 @@
  */
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
-import static com.nttdata.druid.DoublesReservoirModule.TYPE;
-import static com.nttdata.druid.DoublesReservoirModule.TYPE_NAME;
-
-import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import javax.annotation.Nullable;
+import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import org.apache.commons.lang.StringUtils;
 import org.apache.druid.java.util.common.IAE;
-import org.apache.druid.query.aggregation.AggregateCombiner;
-import org.apache.druid.query.aggregation.Aggregator;
-import org.apache.druid.query.aggregation.AggregatorFactory;
-import org.apache.druid.query.aggregation.BufferAggregator;
-import org.apache.druid.query.aggregation.ObjectAggregateCombiner;
+import org.apache.druid.query.aggregation.*;
 import org.apache.druid.query.cache.CacheKeyBuilder;
 import org.apache.druid.segment.ColumnSelectorFactory;
 import org.apache.druid.segment.ColumnValueSelector;
 import org.apache.druid.segment.NilColumnValueSelector;
 import org.apache.druid.segment.column.ColumnType;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+
+import static com.nttdata.druid.DoublesReservoirModule.TYPE;
+import static com.nttdata.druid.DoublesReservoirModule.TYPE_NAME;
 
 @JsonTypeName(TYPE_NAME)
 public class DoublesReservoirAggregatorFactory extends AggregatorFactory {

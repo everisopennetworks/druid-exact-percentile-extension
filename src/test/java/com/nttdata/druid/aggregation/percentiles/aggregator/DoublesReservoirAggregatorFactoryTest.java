@@ -18,21 +18,12 @@
  */
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
-import static com.nttdata.druid.DoublesReservoirModule.TYPE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.apache.druid.jackson.DefaultObjectMapper;
 import org.apache.druid.java.util.common.granularity.Granularities;
 import org.apache.druid.query.Druids;
-import org.apache.druid.query.aggregation.AggregateCombiner;
-import org.apache.druid.query.aggregation.Aggregator;
-import org.apache.druid.query.aggregation.AggregatorFactory;
-import org.apache.druid.query.aggregation.CountAggregatorFactory;
-import org.apache.druid.query.aggregation.TestDoubleColumnSelectorImpl;
+import org.apache.druid.query.aggregation.*;
 import org.apache.druid.query.aggregation.post.FieldAccessPostAggregator;
 import org.apache.druid.query.aggregation.post.FinalizingFieldAccessPostAggregator;
 import org.apache.druid.query.timeseries.TimeseriesQuery;
@@ -40,6 +31,12 @@ import org.apache.druid.query.timeseries.TimeseriesQueryQueryToolChest;
 import org.apache.druid.segment.column.ColumnType;
 import org.apache.druid.segment.column.RowSignature;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static com.nttdata.druid.DoublesReservoirModule.TYPE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DoublesReservoirAggregatorFactoryTest {
     @Test
@@ -108,7 +105,7 @@ class DoublesReservoirAggregatorFactoryTest {
     void testNullReservoir() {
         final DoublesReservoirAggregatorFactory factory =
                 new DoublesReservoirAggregatorFactory("myFactory", "myField", 1024);
-        final double[] values = new double[] {1, 2, 3, 4, 5, 6};
+        final double[] values = new double[]{1, 2, 3, 4, 5, 6};
         final TestDoubleColumnSelectorImpl selector = new TestDoubleColumnSelectorImpl(values);
 
         try (final Aggregator agg1 = new DoublesReservoirBuildAggregator(selector, 8)) {

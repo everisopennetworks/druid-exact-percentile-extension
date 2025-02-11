@@ -18,6 +18,10 @@
  */
 package com.nttdata.druid;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.Binder;
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilePostAggregator;
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilesPostAggregator;
@@ -25,16 +29,13 @@ import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoirCompl
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirObjectSqlAggregator;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirPercentileOperatorConversion;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirPercentilesOperatorConversion;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.inject.Binder;
-import java.util.Collections;
-import java.util.List;
 import org.apache.druid.initialization.DruidModule;
 import org.apache.druid.segment.column.ColumnType;
 import org.apache.druid.segment.serde.ComplexMetrics;
 import org.apache.druid.sql.guice.SqlBindings;
+
+import java.util.Collections;
+import java.util.List;
 
 public class DoublesReservoirModule implements DruidModule {
     public static final String TYPE_NAME = "doublesReservoir";
