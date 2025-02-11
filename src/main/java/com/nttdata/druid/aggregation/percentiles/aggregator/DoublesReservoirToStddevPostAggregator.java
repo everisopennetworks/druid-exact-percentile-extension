@@ -18,12 +18,12 @@
  */
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
-import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Doubles;
+import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import org.apache.druid.query.aggregation.AggregatorFactory;
 import org.apache.druid.query.aggregation.PostAggregator;
 import org.apache.druid.query.cache.CacheKeyBuilder;

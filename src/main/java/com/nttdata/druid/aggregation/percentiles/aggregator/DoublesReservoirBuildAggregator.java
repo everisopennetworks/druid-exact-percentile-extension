@@ -18,8 +18,8 @@
  */
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
-import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
+import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import org.apache.druid.java.util.common.IAE;
 import org.apache.druid.query.aggregation.Aggregator;
 import org.apache.druid.segment.ColumnValueSelector;

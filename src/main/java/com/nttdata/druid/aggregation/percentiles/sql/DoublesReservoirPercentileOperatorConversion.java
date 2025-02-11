@@ -19,8 +19,6 @@
 package com.nttdata.druid.aggregation.percentiles.sql;
 
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilePostAggregator;
-import java.util.List;
-import javax.annotation.Nullable;
 import org.apache.calcite.rex.RexCall;
 import org.apache.calcite.rex.RexLiteral;
 import org.apache.calcite.rex.RexNode;
@@ -37,6 +35,9 @@ import org.apache.druid.sql.calcite.expression.OperatorConversions;
 import org.apache.druid.sql.calcite.expression.PostAggregatorVisitor;
 import org.apache.druid.sql.calcite.expression.SqlOperatorConversion;
 import org.apache.druid.sql.calcite.planner.PlannerContext;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class DoublesReservoirPercentileOperatorConversion implements SqlOperatorConversion {
     private static final String NAME = "DR_GET_PERCENTILE";

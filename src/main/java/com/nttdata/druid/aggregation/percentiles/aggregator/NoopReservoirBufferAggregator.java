@@ -19,9 +19,10 @@
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
 import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
-import java.nio.ByteBuffer;
-import javax.annotation.Nullable;
 import org.apache.druid.query.aggregation.BufferAggregator;
+
+import javax.annotation.Nullable;
+import java.nio.ByteBuffer;
 
 public class NoopReservoirBufferAggregator implements BufferAggregator {
 

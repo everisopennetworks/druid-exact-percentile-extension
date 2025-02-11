@@ -18,12 +18,8 @@
  */
 package com.nttdata.druid.aggregation.percentiles.sql;
 
-import static com.nttdata.druid.DoublesReservoirModule.TYPE;
-
-import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import javax.annotation.Nullable;
+import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
 import org.apache.calcite.rel.core.AggregateCall;
 import org.apache.calcite.rex.RexLiteral;
 import org.apache.calcite.rex.RexNode;
@@ -43,6 +39,11 @@ import org.apache.druid.sql.calcite.planner.Calcites;
 import org.apache.druid.sql.calcite.planner.PlannerContext;
 import org.apache.druid.sql.calcite.rel.InputAccessor;
 import org.apache.druid.sql.calcite.rel.VirtualColumnRegistry;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static com.nttdata.druid.DoublesReservoirModule.TYPE;
 
 public class DoublesReservoirObjectSqlAggregator implements SqlAggregator {
     private static final String NAME = "DR_PERCENTILE_AGG";
