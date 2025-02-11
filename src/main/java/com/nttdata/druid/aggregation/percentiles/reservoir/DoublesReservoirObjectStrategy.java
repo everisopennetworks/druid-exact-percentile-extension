@@ -18,15 +18,16 @@
  */
 package com.nttdata.druid.aggregation.percentiles.reservoir;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import javax.annotation.Nullable;
 import org.apache.druid.java.util.common.IAE;
 import org.apache.druid.segment.data.ObjectStrategy;
 
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+
 public class DoublesReservoirObjectStrategy implements ObjectStrategy<DoublesReservoir> {
-    private static final byte[] EMPTY_BYTES = new byte[] {};
+    private static final byte[] EMPTY_BYTES = new byte[]{};
 
     @Override
     public int compare(final DoublesReservoir s1, final DoublesReservoir s2) {

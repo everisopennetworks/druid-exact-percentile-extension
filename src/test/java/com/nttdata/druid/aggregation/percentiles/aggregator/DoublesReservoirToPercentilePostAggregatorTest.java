@@ -18,14 +18,7 @@
  */
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
-import static com.nttdata.druid.DoublesReservoirModule.TYPE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.HashMap;
-import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.apache.druid.jackson.DefaultObjectMapper;
 import org.apache.druid.java.util.common.granularity.Granularities;
@@ -40,6 +33,12 @@ import org.apache.druid.segment.column.ColumnType;
 import org.apache.druid.segment.column.RowSignature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.nttdata.druid.DoublesReservoirModule.TYPE;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DoublesReservoirToPercentilePostAggregatorTest {
     @Test
@@ -84,7 +83,7 @@ class DoublesReservoirToPercentilePostAggregatorTest {
 
     @Test
     public void normalCase() {
-        final double[] values = new double[] {1, 2, 3, 4, 5};
+        final double[] values = new double[]{1, 2, 3, 4, 5};
         final TestDoubleColumnSelectorImpl selector = new TestDoubleColumnSelectorImpl(values);
 
         try (final Aggregator agg = new DoublesReservoirBuildAggregator(selector, 8)) {

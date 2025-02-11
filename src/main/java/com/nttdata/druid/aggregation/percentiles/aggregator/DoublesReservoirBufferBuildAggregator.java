@@ -18,15 +18,16 @@
  */
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
-import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import com.google.common.base.Preconditions;
+import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import java.nio.ByteBuffer;
-import java.util.IdentityHashMap;
 import org.apache.druid.java.util.common.IAE;
 import org.apache.druid.query.aggregation.BufferAggregator;
 import org.apache.druid.segment.ColumnValueSelector;
+
+import java.nio.ByteBuffer;
+import java.util.IdentityHashMap;
 
 public class DoublesReservoirBufferBuildAggregator implements BufferAggregator {
     private final ColumnValueSelector<?> selector;

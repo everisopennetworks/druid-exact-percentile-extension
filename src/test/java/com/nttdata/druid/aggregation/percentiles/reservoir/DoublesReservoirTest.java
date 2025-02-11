@@ -18,16 +18,15 @@
  */
 package com.nttdata.druid.aggregation.percentiles.reservoir;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.google.common.collect.ImmutableList;
+import org.apache.druid.java.util.common.IAE;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.druid.java.util.common.IAE;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class DoublesReservoirTest {
     @Test
@@ -85,9 +84,9 @@ class DoublesReservoirTest {
         List<Double> list = ImmutableList.of(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0);
         DoublesReservoir reservoir = new DoublesReservoir(list.size(), list);
 
-        double[] expected = new double[] {0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5};
+        double[] expected = new double[]{0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5};
         double[] actual =
-                reservoir.getPercentile(new double[] {0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95});
+                reservoir.getPercentile(new double[]{0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95});
 
         assertArrayEquals(expected, actual);
     }

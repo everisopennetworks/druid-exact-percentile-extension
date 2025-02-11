@@ -18,10 +18,11 @@
  */
 package com.nttdata.druid.aggregation.percentiles.reservoir;
 
-import javax.annotation.Nullable;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.druid.data.input.InputRow;
 import org.apache.druid.segment.serde.ComplexMetricExtractor;
+
+import javax.annotation.Nullable;
 
 public class DoublesReservoirComplexMetricExtractor implements ComplexMetricExtractor {
 
