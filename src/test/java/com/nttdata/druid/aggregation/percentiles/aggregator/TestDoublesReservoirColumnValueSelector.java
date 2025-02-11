@@ -19,9 +19,10 @@
 package com.nttdata.druid.aggregation.percentiles.aggregator;
 
 import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoir;
-import javax.annotation.Nullable;
 import org.apache.druid.query.monomorphicprocessing.RuntimeShapeInspector;
 import org.apache.druid.segment.ColumnValueSelector;
+
+import javax.annotation.Nullable;
 
 class TestDoublesReservoirColumnValueSelector implements ColumnValueSelector<DoublesReservoir> {
     @Override
