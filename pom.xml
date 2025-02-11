@@ -22,7 +22,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>bi.deep</groupId>
+  <groupId>com.nttdata.druid</groupId>
   <artifactId>druid-exact-percentile</artifactId>
   <version>31.0.1-SNAPSHOT</version>
   <name>Druid Exact Percentile Extension</name>
@@ -36,15 +36,15 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git://github.com/deep-bi/druid-exact-percentile-extension.git</connection>
-    <developerConnection>scm:git:git://github.com/deep-bi/druid-exact-percentile-extension.git</developerConnection>
-    <url>https://github.com/deep-bi/druid-exact-percentile-extension/tree/main/</url>
+    <connection>scm:git:git://github.com/everisopennetworks/druid-exact-percentile-extension.git</connection>
+    <developerConnection>scm:git:git://github.com/everisopennetworks/druid-exact-percentile-extension.git</developerConnection>
+    <url>https://github.com/everisopennetworks/druid-exact-percentile-extension/tree/main/</url>
     <tag>HEAD</tag>
   </scm>
 
   <organization>
-    <name>Deep.BI</name>
-    <url>https://www.deep.bi/</url>
+    <name>NTTDATA EMEAL</name>
+    <url>https://www.nttdata.com/global/en/</url>
   </organization>
 
   <dependencies>
