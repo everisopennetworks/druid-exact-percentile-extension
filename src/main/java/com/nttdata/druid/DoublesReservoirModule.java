@@ -25,10 +25,12 @@ import com.google.inject.Binder;
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilePostAggregator;
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilesPostAggregator;
+import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToStddevPostAggregator;
 import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoirComplexMetricSerde;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirObjectSqlAggregator;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirPercentileOperatorConversion;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirPercentilesOperatorConversion;
+import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirStddevOperatorConversion;
 import org.apache.druid.initialization.DruidModule;
 import org.apache.druid.segment.column.ColumnType;
 import org.apache.druid.segment.serde.ComplexMetrics;
@@ -48,6 +50,8 @@ public class DoublesReservoirModule implements DruidModule {
 
         SqlBindings.addOperatorConversion(binder, DoublesReservoirPercentileOperatorConversion.class);
         SqlBindings.addOperatorConversion(binder, DoublesReservoirPercentilesOperatorConversion.class);
+
+        SqlBindings.addOperatorConversion(binder, DoublesReservoirStddevOperatorConversion.class);
     }
 
     @Override
@@ -55,7 +59,9 @@ public class DoublesReservoirModule implements DruidModule {
         return Collections.singletonList(new SimpleModule(getClass().getSimpleName())
                 .registerSubtypes(DoublesReservoirAggregatorFactory.class)
                 .registerSubtypes(DoublesReservoirToPercentilePostAggregator.class)
-                .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class));
+                .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class)
+                .registerSubtypes(DoublesReservoirToStddevPostAggregator.class)
+        );
     }
 
     @VisibleForTesting

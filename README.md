@@ -265,6 +265,30 @@ These SQL functions provide a flexible and efficient way to compute percentiles 
 They enable you to aggregate data, calculate percentiles, and analyze the data without needing to write complex Java code.
 ---
 
+### Other Calculations
+Besides percentiles, the following calculations can be performed from a `doublesReservoir` field (others can be added in future releases):
+
+#### Sample Standard Deviation
+- Post-Aggregation: To compute sample standard deviation from the reservoir, use the `doublesReservoirToStddev` post-aggregator.
+  For example, to compute the standard deviation from the `sample_reservoir`:
+
+```json
+{
+  "type": "doublesReservoirToStddev",
+  "name": "sample_stddev",
+  "field": {
+      "type": "fieldAccess",
+      "fieldName": "sample_reservoir"
+   }
+}
+```
+
+- SQL Usage: After aggregating values into a reservoir, you can retrieve the sample standard deviation using the `DR_GET_STDDEV` function.
+```sql
+DR_GET_STDDEV(reservoir_name)
+```
+
+---
 ### Build
 
 To build the extension, run `mvn package` and you'll get a file in `target` directory.
