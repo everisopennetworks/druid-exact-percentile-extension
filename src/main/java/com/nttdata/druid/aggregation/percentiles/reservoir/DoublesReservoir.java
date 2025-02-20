@@ -19,6 +19,7 @@
 package com.nttdata.druid.aggregation.percentiles.reservoir;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections.CollectionUtils;
@@ -117,6 +118,7 @@ public class DoublesReservoir implements Serializable {
         return percentiles;
     }
 
+    @JsonIgnore
     public double getStddev() {
         return new StandardDeviation().evaluate(reservoir.stream().mapToDouble(Double::doubleValue).toArray());
     }
