@@ -288,6 +288,26 @@ Besides percentiles, the following calculations can be performed from a `doubles
 DR_GET_STDDEV(reservoir_name)
 ```
 
+#### Sample AVG
+- Post-Aggregation: To compute sample AVG from the reservoir, use the `doublesReservoirToAVG` post-aggregator.
+  For example, to compute the mean from the `sample_reservoir`:
+
+```json
+{
+  "type": "doublesReservoirToAVG",
+  "name": "sample_avg",
+  "field": {
+      "type": "fieldAccess",
+      "fieldName": "sample_reservoir"
+   }
+}
+```
+
+- SQL Usage: After aggregating values into a reservoir, you can retrieve the sample mean using the `DR_GET_AVG` function.
+```sql
+DR_GET_AVG(reservoir_name)
+```
+
 ---
 ### Build
 
