@@ -71,7 +71,7 @@ class DoublesReservoirToAVGPostAggregatorTest {
             final Map<String, Object> fields = new HashMap<>();
             fields.put("reservoir", agg.get());
 
-            final PostAggregator postAgg = new DoublesReservoirToAVGdevPostAggregator(
+            final PostAggregator postAgg = new DoublesReservoirToAVGPostAggregator(
                     "avg", new FieldAccessPostAggregator("field", "reservoir"));
 
             final Double avg = (Double) postAgg.compute(fields);
@@ -95,12 +95,12 @@ class DoublesReservoirToAVGPostAggregatorTest {
             final Map<String, Object> fields = new HashMap<>();
             fields.put("reservoir", agg.get());
 
-            final PostAggregator postAgg = new DoublesReservoirToAVGdevPostAggregator(
+            final PostAggregator postAgg = new DoublesReservoirToAVGPostAggregator(
                     "avg", new FieldAccessPostAggregator("field", "reservoir"));
 
             final Double avg = (Double) postAgg.compute(fields);
             assertNotNull(avg);
-            assertEquals(Math.sqrt(2.5), avg, 0);
+            assertEquals(3, avg, 0);
         }
     }
 
@@ -111,7 +111,7 @@ class DoublesReservoirToAVGPostAggregatorTest {
                 .intervals("2000/3000")
                 .granularity(Granularities.HOUR)
                 .aggregators(new DoublesReservoirAggregatorFactory("reservoir", "col", 8))
-                .postAggregators(new DoublesReservoirToAVGdevPostAggregator(
+                .postAggregators(new DoublesReservoirToAVGPostAggregator(
                         "a", new FieldAccessPostAggregator("field", "reservoir")))
                 .build();
 
@@ -126,7 +126,7 @@ class DoublesReservoirToAVGPostAggregatorTest {
 
     @Test
     void testEqualsAndHashCode() {
-        EqualsVerifier.forClass(DoublesReservoirToAVGdevPostAggregator.class)
+        EqualsVerifier.forClass(DoublesReservoirToAVGPostAggregator.class)
                 .withNonnullFields("name", "field")
                 .usingGetClass()
                 .verify();
