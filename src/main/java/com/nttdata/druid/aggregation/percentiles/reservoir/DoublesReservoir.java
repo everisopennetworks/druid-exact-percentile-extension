@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.druid.java.util.common.IAE;
 
 import javax.annotation.Nullable;
@@ -121,6 +122,11 @@ public class DoublesReservoir implements Serializable {
     @JsonIgnore
     public double getStddev() {
         return new StandardDeviation().evaluate(reservoir.stream().mapToDouble(Double::doubleValue).toArray());
+    }
+
+    @JsonIgnore
+    public double getAVG() {
+        return new Mean().evaluate(reservoir.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
     private static void checkFractionBound(final double fraction) {
