@@ -40,14 +40,14 @@ import java.util.Map;
 import static com.nttdata.druid.DoublesReservoirModule.TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DoublesReservoirToMaxPostAggregatorTest {
+class DoublesReservoirToMINPostAggregatorTest {
     @Test
     void testSerde() throws JsonProcessingException {
-        final PostAggregator there = new DoublesReservoirToMAXPostAggregator(
+        final PostAggregator there = new DoublesReservoirToMINPostAggregator(
                 "post", new FieldAccessPostAggregator("field1", "reservoir"));
         DefaultObjectMapper mapper = new DefaultObjectMapper();
-        DoublesReservoirToMAXPostAggregator andBackAgain =
-                mapper.readValue(mapper.writeValueAsString(there), DoublesReservoirToMAXPostAggregator.class);
+        DoublesReservoirToMINPostAggregator andBackAgain =
+                mapper.readValue(mapper.writeValueAsString(there), DoublesReservoirToMINPostAggregator.class);
 
         assertEquals(there, andBackAgain);
         Assertions.assertArrayEquals(there.getCacheKey(), andBackAgain.getCacheKey());
@@ -55,11 +55,11 @@ class DoublesReservoirToMaxPostAggregatorTest {
 
     @Test
     void testToString() {
-        final PostAggregator postAgg = new DoublesReservoirToMAXPostAggregator(
+        final PostAggregator postAgg = new DoublesReservoirToMINPostAggregator(
                 "post", new FieldAccessPostAggregator("field1", "reservoir"));
 
         assertEquals(
-                "DoublesReservoirToMAXPostAggregator{name='post', field=FieldAccessPostAggregator{name='field1', fieldName='reservoir'}}",
+                "DoublesReservoirToMINPostAggregator{name='post', field=FieldAccessPostAggregator{name='field1', fieldName='reservoir'}}",
                 postAgg.toString());
     }
 
@@ -71,13 +71,13 @@ class DoublesReservoirToMaxPostAggregatorTest {
             final Map<String, Object> fields = new HashMap<>();
             fields.put("reservoir", agg.get());
 
-            final PostAggregator postAgg = new DoublesReservoirToMAXPostAggregator(
-                    "avg", new FieldAccessPostAggregator("field", "reservoir"));
+            final PostAggregator postAgg = new DoublesReservoirToMINPostAggregator(
+                    "min", new FieldAccessPostAggregator("field", "reservoir"));
 
-            final Double avg = (Double) postAgg.compute(fields);
-            assertNotNull(avg);
+            final Double min = (Double) postAgg.compute(fields);
+            assertNotNull(min);
 
-            assertTrue(Double.isNaN(avg));
+            assertTrue(Double.isNaN(min));
         }
     }
 
@@ -95,12 +95,12 @@ class DoublesReservoirToMaxPostAggregatorTest {
             final Map<String, Object> fields = new HashMap<>();
             fields.put("reservoir", agg.get());
 
-            final PostAggregator postAgg = new DoublesReservoirToMAXPostAggregator(
+            final PostAggregator postAgg = new DoublesReservoirToMINPostAggregator(
                     "max", new FieldAccessPostAggregator("field", "reservoir"));
 
-            final Double max = (Double) postAgg.compute(fields);
-            assertNotNull(max);
-            assertEquals(5, max, 0);
+            final Double min = (Double) postAgg.compute(fields);
+            assertNotNull(min);
+            assertEquals(1, min, 0);
         }
     }
 
@@ -111,7 +111,7 @@ class DoublesReservoirToMaxPostAggregatorTest {
                 .intervals("2000/3000")
                 .granularity(Granularities.HOUR)
                 .aggregators(new DoublesReservoirAggregatorFactory("reservoir", "col", 8))
-                .postAggregators(new DoublesReservoirToMAXPostAggregator(
+                .postAggregators(new DoublesReservoirToMINPostAggregator(
                         "a", new FieldAccessPostAggregator("field", "reservoir")))
                 .build();
 
@@ -126,7 +126,7 @@ class DoublesReservoirToMaxPostAggregatorTest {
 
     @Test
     void testEqualsAndHashCode() {
-        EqualsVerifier.forClass(DoublesReservoirToMAXPostAggregator.class)
+        EqualsVerifier.forClass(DoublesReservoirToMINPostAggregator.class)
                 .withNonnullFields("name", "field")
                 .usingGetClass()
                 .verify();

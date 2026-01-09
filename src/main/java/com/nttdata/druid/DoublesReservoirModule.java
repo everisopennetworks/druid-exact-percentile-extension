@@ -22,11 +22,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Binder;
-import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirAggregatorFactory;
-import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilePostAggregator;
-import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToPercentilesPostAggregator;
-import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToStddevPostAggregator;
-import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToAVGPostAggregator;
+import com.nttdata.druid.aggregation.percentiles.aggregator.*;
 import com.nttdata.druid.aggregation.percentiles.reservoir.DoublesReservoirComplexMetricSerde;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirObjectSqlAggregator;
 import com.nttdata.druid.aggregation.percentiles.sql.DoublesReservoirPercentileOperatorConversion;
@@ -66,6 +62,8 @@ public class DoublesReservoirModule implements DruidModule {
                 .registerSubtypes(DoublesReservoirToPercentilesPostAggregator.class)
                 .registerSubtypes(DoublesReservoirToStddevPostAggregator.class)
                 .registerSubtypes(DoublesReservoirToAVGPostAggregator.class)
+                .registerSubtypes(DoublesReservoirToMAXPostAggregator.class)
+                .registerSubtypes(DoublesReservoirToMINPostAggregator.class)
         );
     }
 

@@ -36,15 +36,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-@JsonTypeName("doublesReservoirToAVG")
-public class DoublesReservoirToMAXPostAggregator implements PostAggregator {
+@JsonTypeName("doublesReservoirToMIN")
+public class DoublesReservoirToMINPostAggregator implements PostAggregator {
     private static final byte CACHE_ID = 0x64;
 
     private final String name;
     private final PostAggregator field;
 
     @JsonCreator
-    public DoublesReservoirToMAXPostAggregator(
+    public DoublesReservoirToMINPostAggregator(
             @JsonProperty("name") final String name,
             @JsonProperty("field") final PostAggregator field) {
         this.name = Preconditions.checkNotNull(name, "name is null");
@@ -73,7 +73,7 @@ public class DoublesReservoirToMAXPostAggregator implements PostAggregator {
         final Object compute = getField().compute(combinedAggregators);
         final DoublesReservoir reservoir = DoublesReservoir.deserialize(compute);
 
-        return reservoir.getAVG();
+        return reservoir.getMin();
     }
 
     @JsonProperty
@@ -116,7 +116,7 @@ public class DoublesReservoirToMAXPostAggregator implements PostAggregator {
             return false;
         }
 
-        final DoublesReservoirToMAXPostAggregator that = (DoublesReservoirToMAXPostAggregator) o;
+        final DoublesReservoirToMINPostAggregator that = (DoublesReservoirToMINPostAggregator) o;
         return Objects.equals(name, that.name)
                 && Objects.equals(field, that.field);
     }

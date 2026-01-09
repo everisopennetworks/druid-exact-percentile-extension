@@ -37,8 +37,8 @@ import org.apache.druid.sql.calcite.planner.PlannerContext;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class DoublesReservoirMAXOperatorConversion implements SqlOperatorConversion {
-    private static final String NAME = "DR_GET_MAX";
+public class DoublesReservoirMINOperatorConversion implements SqlOperatorConversion {
+    private static final String NAME = "DR_GET_MIN";
     private static final SqlFunction SQL_FUNCTION = OperatorConversions.operatorBuilder(StringUtils.toUpperCase(NAME))
             .operandTypes(SqlTypeFamily.ANY)
             .returnTypeNonNull(SqlTypeName.DOUBLE)

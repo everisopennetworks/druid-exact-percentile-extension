@@ -40,14 +40,14 @@ import java.util.Map;
 import static com.nttdata.druid.DoublesReservoirModule.TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DoublesReservoirToAVGPostAggregatorTest {
+class DoublesReservoirToMAXPostAggregatorTest {
     @Test
     void testSerde() throws JsonProcessingException {
-        final PostAggregator there = new DoublesReservoirToAVGPostAggregator(
+        final PostAggregator there = new DoublesReservoirToMAXPostAggregator(
                 "post", new FieldAccessPostAggregator("field1", "reservoir"));
         DefaultObjectMapper mapper = new DefaultObjectMapper();
-        DoublesReservoirToAVGPostAggregator andBackAgain =
-                mapper.readValue(mapper.writeValueAsString(there), DoublesReservoirToAVGPostAggregator.class);
+        DoublesReservoirToMAXPostAggregator andBackAgain =
+                mapper.readValue(mapper.writeValueAsString(there), DoublesReservoirToMAXPostAggregator.class);
 
         assertEquals(there, andBackAgain);
         Assertions.assertArrayEquals(there.getCacheKey(), andBackAgain.getCacheKey());
@@ -55,11 +55,11 @@ class DoublesReservoirToAVGPostAggregatorTest {
 
     @Test
     void testToString() {
-        final PostAggregator postAgg = new DoublesReservoirToAVGPostAggregator(
+        final PostAggregator postAgg = new DoublesReservoirToMAXPostAggregator(
                 "post", new FieldAccessPostAggregator("field1", "reservoir"));
 
         assertEquals(
-                "DoublesReservoirToAVGPostAggregator{name='post', field=FieldAccessPostAggregator{name='field1', fieldName='reservoir'}}",
+                "DoublesReservoirToMAXPostAggregator{name='post', field=FieldAccessPostAggregator{name='field1', fieldName='reservoir'}}",
                 postAgg.toString());
     }
 
@@ -71,13 +71,13 @@ class DoublesReservoirToAVGPostAggregatorTest {
             final Map<String, Object> fields = new HashMap<>();
             fields.put("reservoir", agg.get());
 
-            final PostAggregator postAgg = new DoublesReservoirToAVGPostAggregator(
-                    "avg", new FieldAccessPostAggregator("field", "reservoir"));
+            final PostAggregator postAgg = new DoublesReservoirToMAXPostAggregator(
+                    "max", new FieldAccessPostAggregator("field", "reservoir"));
 
-            final Double avg = (Double) postAgg.compute(fields);
-            assertNotNull(avg);
+            final Double max = (Double) postAgg.compute(fields);
+            assertNotNull(max);
 
-            assertTrue(Double.isNaN(avg));
+            assertTrue(Double.isNaN(max));
         }
     }
 
@@ -95,12 +95,12 @@ class DoublesReservoirToAVGPostAggregatorTest {
             final Map<String, Object> fields = new HashMap<>();
             fields.put("reservoir", agg.get());
 
-            final PostAggregator postAgg = new DoublesReservoirToAVGPostAggregator(
-                    "avg", new FieldAccessPostAggregator("field", "reservoir"));
+            final PostAggregator postAgg = new DoublesReservoirToMAXPostAggregator(
+                    "max", new FieldAccessPostAggregator("field", "reservoir"));
 
-            final Double avg = (Double) postAgg.compute(fields);
-            assertNotNull(avg);
-            assertEquals(3, avg, 0);
+            final Double max = (Double) postAgg.compute(fields);
+            assertNotNull(max);
+            assertEquals(5, max, 0);
         }
     }
 
@@ -111,7 +111,7 @@ class DoublesReservoirToAVGPostAggregatorTest {
                 .intervals("2000/3000")
                 .granularity(Granularities.HOUR)
                 .aggregators(new DoublesReservoirAggregatorFactory("reservoir", "col", 8))
-                .postAggregators(new DoublesReservoirToAVGPostAggregator(
+                .postAggregators(new DoublesReservoirToMAXPostAggregator(
                         "a", new FieldAccessPostAggregator("field", "reservoir")))
                 .build();
 
@@ -126,7 +126,7 @@ class DoublesReservoirToAVGPostAggregatorTest {
 
     @Test
     void testEqualsAndHashCode() {
-        EqualsVerifier.forClass(DoublesReservoirToAVGPostAggregator.class)
+        EqualsVerifier.forClass(DoublesReservoirToMAXPostAggregator.class)
                 .withNonnullFields("name", "field")
                 .usingGetClass()
                 .verify();

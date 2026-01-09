@@ -26,8 +26,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.rank.Min;
 import org.apache.druid.java.util.common.IAE;
-
+import org.apache.commons.math3.stat.descriptive.rank.Max;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
@@ -129,6 +130,21 @@ public class DoublesReservoir implements Serializable {
         return new Mean().evaluate(reservoir.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
+    public double getMax() {
+        return new Max().evaluate(
+                reservoir.stream()
+                        .mapToDouble(Double::doubleValue)
+                        .toArray()
+        );
+    }
+
+    public double getMin() {
+        return new Min().evaluate(
+                reservoir.stream()
+                        .mapToDouble(Double::doubleValue)
+                        .toArray()
+        );
+    }
     private static void checkFractionBound(final double fraction) {
         if ((fraction < 0.0) || (fraction > 1.0)) {
             throw new IAE("A fraction must be >= 0 and <= 1.0: " + fraction);
