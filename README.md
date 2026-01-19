@@ -302,10 +302,25 @@ DR_GET_STDDEV(reservoir_name)
    }
 }
 ```
+---
+#### Sample MAX
+- Post-Aggregation: To compute the sample MAX from the reservoir, use the `doublesReservoirToMAX` post-aggregator.  
+  This post-aggregator extracts the maximum value from a `double` reservoir that was previously
+  populated during aggregation:
+
 
 - SQL Usage: After aggregating values into a reservoir, you can retrieve the sample mean using the `DR_GET_AVG` function.
 ```sql
-DR_GET_AVG(reservoir_name)
+DR_GET_MAX(reservoir_name)
+```
+---
+#### Sample MIN
+- Post-Aggregation: To compute the sample MIN from the reservoir, use the `doublesReservoirToMIN` post-aggregator.  
+This post-aggregator extracts the minimum value from a `double` reservoir that was previously
+populated during aggregation.
+- - SQL Usage: After aggregating values into a reservoir, you can retrieve the sample mean using the `DR_GET_AVG` function.
+```sql
+DR_GET_MIN(reservoir_name)
 ```
 
 ---

@@ -27,7 +27,7 @@
 
   <groupId>com.nttdata.druid</groupId>
   <artifactId>druid-exact-percentile</artifactId>
-  <version>32.0.1-SNAPSHOT</version>
+  <version>32.0.2-SNAPSHOT</version>
   <name>Druid Exact Percentile Extension</name>
   <description>Druid custom extension for calculating exact percentiles using Reservoir Sampling.</description>
 
