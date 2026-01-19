@@ -19,6 +19,7 @@
 package com.nttdata.druid.aggregation.percentiles.sql;
 
 import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToAVGPostAggregator;
+import com.nttdata.druid.aggregation.percentiles.aggregator.DoublesReservoirToMINPostAggregator;
 import org.apache.calcite.rex.RexCall;
 import org.apache.calcite.rex.RexNode;
 import org.apache.calcite.sql.SqlFunction;
@@ -70,8 +71,9 @@ public class DoublesReservoirMINOperatorConversion implements SqlOperatorConvers
             return null;
         }
 
-        return new DoublesReservoirToAVGPostAggregator(
+        return new DoublesReservoirToMINPostAggregator(
                 postAggregatorVisitor.getOutputNamePrefix() + postAggregatorVisitor.getAndIncrementCounter(),
                 firstOperand);
+
     }
 }
