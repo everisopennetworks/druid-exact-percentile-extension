@@ -130,6 +130,7 @@ public class DoublesReservoir implements Serializable {
         return new Mean().evaluate(reservoir.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
+    @JsonIgnore
     public double getMax() {
         return new Max().evaluate(
                 reservoir.stream()
@@ -138,6 +139,7 @@ public class DoublesReservoir implements Serializable {
         );
     }
 
+    @JsonIgnore
     public double getMin() {
         return new Min().evaluate(
                 reservoir.stream()
