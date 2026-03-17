@@ -51,6 +51,8 @@ public class DoublesReservoirModule implements DruidModule {
 
         SqlBindings.addOperatorConversion(binder, DoublesReservoirMINOperatorConversion.class);
         SqlBindings.addOperatorConversion(binder, DoublesReservoirMAXOperatorConversion.class);
+
+        SqlBindings.addOperatorConversion(binder, DoublesReservoirSUMOperatorConversion.class);
     }
 
     @Override
@@ -63,6 +65,7 @@ public class DoublesReservoirModule implements DruidModule {
                 .registerSubtypes(DoublesReservoirToAVGPostAggregator.class)
                 .registerSubtypes(DoublesReservoirToMAXPostAggregator.class)
                 .registerSubtypes(DoublesReservoirToMINPostAggregator.class)
+                .registerSubtypes(DoublesReservoirToSUMPostAggregator.class)
         );
     }
 
