@@ -27,15 +27,15 @@
 
   <groupId>com.nttdata.druid</groupId>
   <artifactId>druid-exact-percentile</artifactId>
-  <version>32.0.2-SNAPSHOT</version>
+  <version>38.0.0-SNAPSHOT</version>
   <name>Druid Exact Percentile Extension</name>
   <description>Druid custom extension for calculating exact percentiles using Reservoir Sampling.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <druid.version>32.0.1</druid.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <druid.version>38.0.0</druid.version>
   </properties>
 
   <scm>
@@ -182,8 +182,8 @@
         <version>3.11.0</version>
         <configuration>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>21</source>
+          <target>21</target>
         </configuration>
       </plugin>
       <plugin>
